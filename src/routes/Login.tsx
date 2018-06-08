@@ -7,6 +7,7 @@ import { State } from '../types'
 import { microsoftProvider } from '../providers/microsoft'
 import { azureProvider } from '../providers/azuread'
 import { pingProvider } from '../providers/riverisland'
+import { awsProvider } from '../providers/aws'
 import RSA from 'react-simple-auth'
 import './Login.css'
 
@@ -38,6 +39,15 @@ class Component extends React.Component<Props, {}> {
             throw error
         }
     }
+    async onAWSClickLogin() {
+        try {
+            const session = await RSA.acquireTokenAsync(awsProvider)
+            const { login } = this.props
+            login(session.decodedIdToken.oid, session.decodedIdToken.Username)
+        } catch (error) {
+            throw error
+        }
+    }
 
     render() {
         return (
@@ -52,6 +62,9 @@ class Component extends React.Component<Props, {}> {
                     </button>
                     <button type="button" className="login-button" onClick={() => this.onPingClickLogin()}>
                         <img src="/images/sign-in-with-ri-light.png" alt="Login with Azure AD" />
+                    </button>
+                    <button type="button" className="login-button" onClick={() => this.onAWSClickLogin()}>
+                        <img src="/images/sign-in-with-aws-light.png" alt="Login with AWS" />
                     </button>
                 </div>
             </div>
